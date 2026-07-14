@@ -16,6 +16,8 @@
     --muted: #8a8175;
     --surface: #ffffff;
     --border: #d8d2c4;
+    --warning-bg: #f9f0ed;
+    --row-even: #efece2;
     --font-display: 'Bahnschrift', 'Segoe UI Semibold', 'Arial Narrow', sans-serif;
     --font-body: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     --font-mono: 'Cascadia Mono', 'Consolas', 'SFMono-Regular', Menlo, monospace;
@@ -32,6 +34,8 @@
       --muted: #a69c8c;
       --surface: #242320;
       --border: #3a382f;
+      --warning-bg: #332b25;
+      --row-even: #282725;
     }
   }
   :root[data-theme="dark"] {
@@ -44,6 +48,8 @@
     --muted: #a69c8c;
     --surface: #242320;
     --border: #3a382f;
+    --warning-bg: #332b25;
+    --row-even: #282725;
   }
   :root[data-theme="light"] {
     --paper: #f5f2ea;
@@ -55,6 +61,8 @@
     --muted: #8a8175;
     --surface: #ffffff;
     --border: #d8d2c4;
+    --warning-bg: #f9f0ed;
+    --row-even: #efece2;
   }
 
   * { box-sizing: border-box; }
@@ -139,7 +147,7 @@
   .btn-primary { background: var(--primary); color: #fff; }
   .btn-primary:hover { filter: brightness(1.08); }
   .btn-secondary { background: var(--surface); color: var(--primary); }
-  .btn-secondary:hover { background: color-mix(in srgb, var(--primary) 10%, var(--surface)); }
+  .btn-secondary:hover { background: var(--paper-line); }
   .btn:focus-visible { outline: 2px solid var(--electrical); outline-offset: 2px; }
   .toolbar-hint {
     font-family: var(--font-body);
@@ -187,7 +195,7 @@
   .warning {
     margin-top: 20px;
     border-left: 4px solid var(--electrical);
-    background: color-mix(in srgb, var(--electrical) 8%, var(--surface));
+    background: var(--warning-bg);
     padding: 12px 16px;
     font-size: 13px;
     font-style: italic;
@@ -244,7 +252,7 @@
     border-bottom: 1px solid var(--border);
   }
   table.spec-table tr:nth-child(even) td {
-    background: color-mix(in srgb, var(--paper-line) 55%, var(--surface));
+    background: var(--row-even);
   }
   table.spec-table tr { break-inside: avoid; }
   td.num, table.spec-table .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -269,7 +277,10 @@
       --muted: #6b6459;
       --surface: #ffffff;
       --border: #cfc9ba;
+      --warning-bg: #f9f0ed;
+      --row-even: #f5f2ea;
     }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
     body { background: #fff; }
     .page { margin: 0; border: none; max-width: none; padding: 0; }
     .toolbar { display: none; }
@@ -304,7 +315,7 @@
 
   <!-- ================= FLOOR PLAN ================= -->
   <section class="plan-sheet">
-    <svg viewBox="-55 -55 615 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема планировки студии с расстановкой мебели, электрики и сантехники">
+    <svg viewBox="-55 -55 615 700" width="615" height="700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема планировки студии с расстановкой мебели, электрики и сантехники">
       <defs>
         <symbol id="sym-outlet" viewBox="-8 -8 16 16">
           <circle cx="0" cy="0" r="6" fill="var(--surface)" stroke="var(--electrical)" stroke-width="1.6"/>
