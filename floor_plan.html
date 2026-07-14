@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Планировка — Студия 30.4 м²</title>
+<style>
+
+  :root {
+    --paper: #f5f2ea;
+    --paper-line: #e2dccb;
+    --ink: #211f1c;
+    --primary: #0b4f8f;
+    --electrical: #b8471f;
+    --plumbing: #1e7a72;
+    --muted: #8a8175;
+    --surface: #ffffff;
+    --border: #d8d2c4;
+    --font-display: 'Bahnschrift', 'Segoe UI Semibold', 'Arial Narrow', sans-serif;
+    --font-body: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'Cascadia Mono', 'Consolas', 'SFMono-Regular', Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1b1a17;
+      --paper-line: #2b2a25;
+      --ink: #ede9df;
+      --primary: #6fa8dc;
+      --electrical: #e08a5b;
+      --plumbing: #4fbfb2;
+      --muted: #a69c8c;
+      --surface: #242320;
+      --border: #3a382f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1b1a17;
+    --paper-line: #2b2a25;
+    --ink: #ede9df;
+    --primary: #6fa8dc;
+    --electrical: #e08a5b;
+    --plumbing: #4fbfb2;
+    --muted: #a69c8c;
+    --surface: #242320;
+    --border: #3a382f;
+  }
+  :root[data-theme="light"] {
+    --paper: #f5f2ea;
+    --paper-line: #e2dccb;
+    --ink: #211f1c;
+    --primary: #0b4f8f;
+    --electrical: #b8471f;
+    --plumbing: #1e7a72;
+    --muted: #8a8175;
+    --surface: #ffffff;
+    --border: #d8d2c4;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper-line);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    max-width: 940px;
+    margin: 28px auto 80px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 26px 30px 40px;
+  }
+
+  /* ---------- title block ---------- */
+  .titleblock {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .project-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    color: var(--primary);
+  }
+  .project-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .tb-table {
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+  .tb-table td {
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+  }
+  .tb-table td:first-child {
+    color: var(--muted);
+    text-align: right;
+    border-right: none;
+  }
+
+  .toolbar {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .btn-row { display: flex; gap: 8px; }
+  .btn {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--primary);
+    padding: 10px 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-secondary { background: var(--surface); color: var(--primary); }
+  .btn-secondary:hover { background: color-mix(in srgb, var(--primary) 10%, var(--surface)); }
+  .btn:focus-visible { outline: 2px solid var(--electrical); outline-offset: 2px; }
+  .toolbar-hint {
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    max-width: 220px;
+    text-align: right;
+    display: none;
+  }
+  .toolbar-hint.visible { display: block; }
+
+  /* ---------- plan sheet ---------- */
+  .plan-sheet {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px;
+  }
+  .plan-sheet svg { width: 100%; height: auto; display: block; }
+
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 8px 28px;
+    justify-content: start;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .legend-item svg { flex: none; }
+  .legend-note {
+    grid-column: 1 / -1;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ---------- notes / warning ---------- */
+  .warning {
+    margin-top: 20px;
+    border-left: 4px solid var(--electrical);
+    background: color-mix(in srgb, var(--electrical) 8%, var(--surface));
+    padding: 12px 16px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .warning b { font-style: normal; color: var(--electrical); }
+
+  /* ---------- spec sections ---------- */
+  h2 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin: 30px 0 12px;
+    break-after: avoid;
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 20px 0 8px;
+    break-after: avoid;
+  }
+  p { font-size: 13.5px; line-height: 1.55; max-width: 68ch; }
+  ul.spec-list, ol.spec-list {
+    margin: 0 0 10px;
+    padding-left: 20px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  ul.spec-list li, ol.spec-list li { margin-bottom: 4px; break-inside: avoid; }
+
+  .table-wrap { overflow-x: auto; }
+  table.spec-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12.5px;
+    margin-bottom: 16px;
+  }
+  table.spec-table th {
+    background: var(--primary);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-align: left;
+    padding: 7px 10px;
+    letter-spacing: 0.01em;
+  }
+  table.spec-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.spec-table tr:nth-child(even) td {
+    background: color-mix(in srgb, var(--paper-line) 55%, var(--surface));
+  }
+  table.spec-table tr { break-inside: avoid; }
+  td.num, table.spec-table .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  footer.sheet-footer {
+    margin-top: 26px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--muted);
+  }
+
+  @media print {
+    :root, :root[data-theme="dark"] {
+      --paper: #ffffff;
+      --paper-line: #ece7d9;
+      --ink: #1a1a1a;
+      --primary: #0b4f8f;
+      --electrical: #b8471f;
+      --plumbing: #1e7a72;
+      --muted: #6b6459;
+      --surface: #ffffff;
+      --border: #cfc9ba;
+    }
+    body { background: #fff; }
+    .page { margin: 0; border: none; max-width: none; padding: 0; }
+    .toolbar { display: none; }
+    h2 { break-before: auto; }
+    .spec { break-before: page; }
+    @page { size: A4; margin: 13mm; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btn-print" type="button">Печать</button>
+    <button class="btn btn-secondary" id="btn-pdf" type="button">PDF</button>
+  </div>
+  <div class="toolbar-hint" id="pdf-hint">В диалоге печати выберите принтер «Сохранить как PDF» / «Microsoft Print to PDF»</div>
+</div>
+
+<div class="page">
+
+  <div class="titleblock">
+    <div>
+      <div class="project-name">ТЕХНИЧЕСКИЙ ДИЗАЙН-ПРОЕКТ</div>
+      <div class="project-sub">Однокомнатная квартира-студия · 30.4 м² · высота потолков 2.40 м</div>
+    </div>
+    <table class="tb-table">
+      <tr><td>Лист</td><td>1 / Планировка (схема)</td></tr>
+      <tr><td>Основание</td><td>обмеры + рукописная схема заказчика</td></tr>
+      <tr><td>Дата</td><td>14.07.2026</td></tr>
+    </table>
+  </div>
+
+  <!-- ================= FLOOR PLAN ================= -->
+  <section class="plan-sheet">
+    <svg viewBox="-55 -55 615 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема планировки студии с расстановкой мебели, электрики и сантехники">
+      <defs>
+        <symbol id="sym-outlet" viewBox="-8 -8 16 16">
+          <circle cx="0" cy="0" r="6" fill="var(--surface)" stroke="var(--electrical)" stroke-width="1.6"/>
+          <line x1="-3" y1="0" x2="3" y2="0" stroke="var(--electrical)" stroke-width="1.4"/>
+          <line x1="0" y1="-3" x2="0" y2="3" stroke="var(--electrical)" stroke-width="1.4"/>
+        </symbol>
+        <symbol id="sym-power" viewBox="-7 -7 14 14">
+          <rect x="-6" y="-6" width="12" height="12" fill="var(--surface)" stroke="var(--electrical)" stroke-width="1.6"/>
+          <line x1="-6" y1="6" x2="6" y2="-6" stroke="var(--electrical)" stroke-width="1.6"/>
+        </symbol>
+        <symbol id="sym-water" viewBox="-7 -7 14 14">
+          <circle cx="0" cy="0" r="5.2" fill="var(--plumbing)" opacity="0.18" stroke="var(--plumbing)" stroke-width="1.5"/>
+          <circle cx="0" cy="0" r="1.6" fill="var(--plumbing)"/>
+        </symbol>
+        <symbol id="sym-drain" viewBox="-7 -7 14 14">
+          <path d="M -5 -4 L 5 -4 L 0 5.5 Z" fill="var(--surface)" stroke="var(--plumbing)" stroke-width="1.5"/>
+        </symbol>
+        <pattern id="paper-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="var(--paper-line)" stroke-width="0.6"/>
+        </pattern>
+      </defs>
+
+      <rect x="-55" y="-55" width="615" height="700" fill="url(#paper-grid)"/>
+
+      <!-- ============ ROOM FILLS ============ -->
+      <rect x="0" y="0" width="500" height="380" fill="var(--surface)"/>
+      <rect x="0" y="380" width="240" height="190" fill="var(--surface)"/>
+      <rect x="240" y="380" width="200" height="190" fill="var(--surface)"/>
+
+      <!-- ============ FURNITURE ============ -->
+      <g stroke="var(--ink)" stroke-width="1.4" fill="none">
+        <!-- kitchen run -->
+        <rect x="0" y="0" width="40" height="60"/>
+        <rect x="40" y="0" width="60" height="60"/>
+        <rect x="100" y="0" width="20" height="60"/>
+        <rect x="120" y="0" width="60" height="60"/>
+        <rect x="180" y="0" width="60" height="60"/>
+        <!-- fridge -->
+        <rect x="241" y="0" width="58" height="58"/>
+        <!-- bed -->
+        <rect x="398" y="0" width="102" height="213"/>
+        <!-- sofa (rounded front) -->
+        <path d="M 320 250 H 500 V 380 H 320 V 280 Q 320 250 350 250 Z"/>
+        <!-- bathroom fixtures -->
+        <path d="M 150 380 H 220 L 240 400 V 470 H 150 Z"/><!-- shower, chamfered corner -->
+        <rect x="0" y="400" width="35" height="48"/><!-- toilet install -->
+        <rect x="0" y="540" width="69" height="30"/><!-- sink cabinet -->
+        <rect x="69" y="520" width="50" height="50"/><!-- washer -->
+        <!-- entry -->
+        <rect x="240" y="510" width="178" height="60"/><!-- closet -->
+        <rect x="368" y="392" width="58" height="42"/><!-- hooks -->
+      </g>
+
+      <!-- furniture captions -->
+      <g font-family="var(--font-mono)" font-size="8.5" fill="var(--muted)" text-anchor="middle">
+        <text x="120" y="34">240 × 60 (5 секций)</text>
+        <text x="270" y="34">58×58</text>
+        <text x="449" y="110" transform="rotate(90 449 110)">213 × 102</text>
+        <text x="410" y="318">180 × 130</text>
+        <text x="195" y="428">90×90</text>
+        <text x="17.5" y="428">48 (уст.)</text>
+        <text x="34.5" y="558">69×30</text>
+        <text x="94" y="548">50×50</text>
+        <text x="329" y="544">178 × 60</text>
+        <text x="397" y="416">58×50</text>
+      </g>
+
+      <!-- ============ ZONE LABELS ============ -->
+      <g font-family="var(--font-display)" font-weight="700" font-size="15" fill="var(--primary)">
+        <text x="120" y="90">КУХНЯ</text>
+        <text x="449" y="238" text-anchor="middle">СПАЛЬНЯ</text>
+        <text x="230" y="320" text-anchor="middle">ГОСТИНАЯ</text>
+        <text x="60" y="500" text-anchor="middle">САНУЗЕЛ</text>
+        <text x="330" y="470" text-anchor="middle">ПРИХОЖАЯ</text>
+      </g>
+
+      <!-- ============ WALLS (drawn over fills, with door gaps) ============ -->
+      <g stroke="var(--ink)" stroke-width="4" stroke-linecap="square" fill="none">
+        <!-- main room -->
+        <line x1="0" y1="0" x2="500" y2="0"/>
+        <line x1="500" y1="0" x2="500" y2="380"/>
+        <line x1="500" y1="380" x2="495" y2="380"/>
+        <line x1="450" y1="380" x2="440" y2="380"/>
+        <line x1="310" y1="380" x2="260" y2="380"/>
+        <line x1="240" y1="380" x2="0" y2="380"/>
+        <!-- left capital wall, full height -->
+        <line x1="0" y1="0" x2="0" y2="570"/>
+        <!-- bathroom -->
+        <line x1="0" y1="570" x2="240" y2="570"/>
+        <line x1="240" y1="380" x2="240" y2="470"/>
+        <line x1="240" y1="520" x2="240" y2="570"/>
+        <!-- entry -->
+        <line x1="240" y1="570" x2="440" y2="570"/>
+        <line x1="440" y1="380" x2="440" y2="400"/>
+        <line x1="440" y1="450" x2="440" y2="570"/>
+      </g>
+
+      <!-- terrace threshold hint -->
+      <g stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3">
+        <line x1="445" y1="392" x2="500" y2="392"/>
+      </g>
+      <text x="472" y="404" font-family="var(--font-mono)" font-size="8" fill="var(--muted)" text-anchor="middle">терраса</text>
+
+      <!-- door leaves + swings -->
+      <g stroke="var(--ink)" stroke-width="1.2" fill="none">
+        <path d="M 390 400 L 440 400 M 390 400 A 50 50 0 0 1 440 450"/>
+        <path d="M 190 470 L 240 470 M 190 470 A 50 50 0 0 1 240 520"/>
+        <path d="M 260 380 L 260 330 M 260 330 A 50 50 0 0 0 310 380"/>
+        <path d="M 450 380 L 450 335 M 450 335 A 45 45 0 0 0 495 380"/>
+      </g>
+
+      <!-- ============ ELECTRICAL ============ -->
+      <g>
+        <use href="#sym-outlet" x="413" y="408" width="16" height="16"/>
+        <use href="#sym-outlet" x="262" y="548" width="16" height="16"/>
+        <use href="#sym-power"  x="86"  y="514" width="14" height="14"/>
+        <use href="#sym-outlet" x="34"  y="534" width="16" height="16"/>
+        <use href="#sym-power"  x="63"  y="51"  width="14" height="14"/>
+        <use href="#sym-outlet" x="142" y="-3"  width="16" height="16"/>
+        <use href="#sym-outlet" x="202" y="-3"  width="16" height="16"/>
+        <use href="#sym-power"  x="292" y="23"  width="14" height="14"/>
+        <use href="#sym-outlet" x="390" y="13"  width="16" height="16"/>
+        <use href="#sym-outlet" x="390" y="186" width="16" height="16"/>
+        <use href="#sym-outlet" x="322" y="293" width="16" height="16"/>
+        <use href="#sym-outlet" x="337" y="371" width="16" height="16"/>
+        <use href="#sym-outlet" x="357" y="371" width="16" height="16"/>
+        <use href="#sym-outlet" x="252" y="371" width="16" height="16"/>
+        <use href="#sym-outlet" x="267" y="371" width="16" height="16"/>
+        <use href="#sym-outlet" x="282" y="371" width="16" height="16"/>
+        <use href="#sym-power"  x="492" y="293" width="14" height="14"/>
+      </g>
+      <g font-family="var(--font-mono)" font-size="7.6" fill="var(--electrical)">
+        <text x="429" y="413">вход h=30</text>
+        <text x="278" y="553">шкаф h=30</text>
+        <text x="103" y="522">СМ h=60</text>
+        <text x="50" y="540">зеркало h=100</text>
+        <text x="79" y="60">плита h=12</text>
+        <text x="150" y="10" text-anchor="middle">фартук</text>
+        <text x="210" y="10" text-anchor="middle">h=105</text>
+        <text x="308" y="31">холод. h=30</text>
+        <text x="406" y="18">кровать h=60</text>
+        <text x="406" y="191">кровать h=60</text>
+        <text x="338" y="298">диван h=30</text>
+        <text x="322" y="367" text-anchor="middle">стол h=85</text>
+        <text x="267" y="367" text-anchor="middle">ТВ+RJ45 h=110</text>
+        <text x="499" y="288" text-anchor="middle">конд.</text>
+        <text x="499" y="298" text-anchor="middle">h=210</text>
+      </g>
+
+      <!-- ============ PLUMBING ============ -->
+      <g>
+        <use href="#sym-water" x="188" y="418" width="14" height="14"/>
+        <use href="#sym-drain" x="10"  y="417" width="14" height="14"/>
+        <use href="#sym-water" x="27"  y="534" width="14" height="14"/>
+        <use href="#sym-drain" x="43"  y="538" width="14" height="14"/>
+        <use href="#sym-water" x="87"  y="514" width="14" height="14"/>
+        <use href="#sym-drain" x="103" y="514" width="14" height="14"/>
+      </g>
+      <g font-family="var(--font-mono)" font-size="7.4" fill="var(--plumbing)">
+        <text x="195" y="440" text-anchor="middle">ГВС/ХВС h=100</text>
+        <text x="17" y="410" text-anchor="middle">выпуск h=18-22</text>
+        <text x="34" y="565" text-anchor="middle">ГВС/ХВС h=55</text>
+        <text x="50" y="533" text-anchor="middle">Ø32 h=50-53</text>
+        <text x="94" y="508" text-anchor="middle">ХВС h=60 / слив h=60</text>
+      </g>
+
+      <!-- ============ OVERALL DIMENSIONS ============ -->
+      <g stroke="var(--muted)" stroke-width="0.7" font-family="var(--font-mono)" font-size="9" fill="var(--muted)">
+        <line x1="0" y1="-16" x2="500" y2="-16"/>
+        <line x1="0" y1="-20" x2="0" y2="-12"/>
+        <line x1="500" y1="-20" x2="500" y2="-12"/>
+        <text x="250" y="-20" text-anchor="middle" stroke="none">≈ 500 см</text>
+
+        <line x1="-16" y1="0" x2="-16" y2="380"/>
+        <line x1="-20" y1="0" x2="-12" y2="0"/>
+        <line x1="-20" y1="380" x2="-12" y2="380"/>
+        <text x="-22" y="190" text-anchor="middle" stroke="none" transform="rotate(-90 -22 190)">≈ 380 см</text>
+
+        <line x1="0" y1="583" x2="240" y2="583"/>
+        <text x="120" y="595" text-anchor="middle" stroke="none">≈ 240 см</text>
+        <line x1="240" y1="583" x2="440" y2="583"/>
+        <text x="340" y="595" text-anchor="middle" stroke="none">≈ 200 см</text>
+      </g>
+
+      <!-- scale bar -->
+      <g transform="translate(0,625)">
+        <line x1="0" y1="0" x2="100" y2="0" stroke="var(--ink)" stroke-width="1.5"/>
+        <line x1="0" y1="-4" x2="0" y2="4" stroke="var(--ink)" stroke-width="1.5"/>
+        <line x1="50" y1="-4" x2="50" y2="4" stroke="var(--ink)" stroke-width="1.5"/>
+        <line x1="100" y1="-4" x2="100" y2="4" stroke="var(--ink)" stroke-width="1.5"/>
+        <text x="0" y="16" font-family="var(--font-mono)" font-size="8" fill="var(--muted)">0</text>
+        <text x="50" y="16" font-family="var(--font-mono)" font-size="8" fill="var(--muted)" text-anchor="middle">50 см</text>
+        <text x="100" y="16" font-family="var(--font-mono)" font-size="8" fill="var(--muted)" text-anchor="middle">100 см</text>
+      </g>
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><svg width="16" height="16"><use href="#sym-outlet"/></svg> Обычная розетка</div>
+      <div class="legend-item"><svg width="14" height="14"><use href="#sym-power"/></svg> Силовой / влагозащ. вывод</div>
+      <div class="legend-item"><svg width="14" height="14"><use href="#sym-water"/></svg> Точка ГВС/ХВС</div>
+      <div class="legend-item"><svg width="14" height="14"><use href="#sym-drain"/></svg> Точка канализации</div>
+      <div class="legend-note">h — высота от чистого пола, см. Схема составлена по обмерам и спецификации ниже; расстановка не является геодезической съёмкой — сверяйте оси на месте перед штроблением.</div>
+    </div>
+  </section>
+
+  <div class="warning">
+    <b>Внимание для прораба:</b> высота потолков в черновом состоянии — 2.40 м. Не допускается многоуровневый гипсокартон, существенно занижающий высоту. Рекомендован тонкий матовый натяжной потолок или окраска плиты перекрытия. Коммуникации по полу — в тонкой гофре, минимизируя толщину стяжки/наливного пола.
+  </div>
+
+  <!-- ================= SPEC SECTIONS ================= -->
+  <section class="spec">
+    <h2>1. Демонтаж и геометрия стен</h2>
+    <p>Перед началом монтажных работ строителям необходимо выполнить:</p>
+    <ul class="spec-list">
+      <li>Полный демонтаж старой плитки со стен и пола в санузле.</li>
+      <li>Снятие напольного покрытия (ламинат, плитка) и удаление старой стяжки до плиты перекрытия.</li>
+      <li>Демонтаж дверных коробок, старой сантехники, кухонной мебели и техники.</li>
+      <li>Очистка стен от старых обоев, шпаклевки и фартука.</li>
+    </ul>
+
+    <h2>2. Спецификация мебели и габаритов по зонам</h2>
+    <div class="table-wrap">
+      <table class="spec-table">
+        <thead><tr><th>Зона</th><th>Элемент</th><th>Габариты (Ш×Г, см)</th><th>Примечания</th></tr></thead>
+        <tbody>
+          <tr><td>Прихожая</td><td>Встроенный шкаф</td><td class="num">178 × 60</td><td>Монтаж от угла</td></tr>
+          <tr><td>Прихожая</td><td>Вешалка</td><td class="num">58 × 50</td><td>Открытая зона у входа</td></tr>
+          <tr><td>Санузел</td><td>Душевой поддон</td><td class="num">90 × 90</td><td>Со скошенным углом</td></tr>
+          <tr><td>Санузел</td><td>Унитаз (инсталляция)</td><td class="num">48 (длина)</td><td>Короб стояка/инсталляции 30 см</td></tr>
+          <tr><td>Санузел</td><td>Тумба с раковиной</td><td class="num">69 × 30</td><td>Слева от входа</td></tr>
+          <tr><td>Санузел</td><td>Стиральная машина</td><td class="num">50 × 50</td><td>Слева от входа в углу</td></tr>
+          <tr><td>Кухня</td><td>Линейный гарнитур</td><td class="num">241 (общая длина)</td><td>Модули: 40-60-20-60-60</td></tr>
+          <tr><td>Кухня</td><td>Холодильник</td><td class="num">58 × 58</td><td>Отдельностоящий в углу</td></tr>
+          <tr><td>Спальня</td><td>Кровать</td><td class="num">213 × 102</td><td>По правой стене</td></tr>
+          <tr><td>Гостиная</td><td>Диван</td><td class="num">180 × 130</td><td>В углу у выхода на террасу</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Конфигурация кухонного гарнитура</h3>
+    <p>Общая длина кухонной линии по чертежу составляет 240 см (+1 см зазор):</p>
+    <ol class="spec-list">
+      <li>Секция 1: Бутылочница/карго — 40 см.</li>
+      <li>Секция 2: Варочная панель и духовой шкаф — 60 см (требуется силовой вывод).</li>
+      <li>Секция 3: Бутылочница/карго — 20 см.</li>
+      <li>Секция 4: Модуль с выдвижными ящиками (рабочая зона) — 60 см.</li>
+      <li>Секция 5: Шкаф под мойку — 60 см (выводы воды и канализации внутри секции).</li>
+    </ol>
+
+    <h2>3. Инженерный план сантехнических узлов</h2>
+    <p>При разводке водопровода и канализации строителям необходимо строго придерживаться следующих осей:</p>
+    <ul class="spec-list">
+      <li><b>Душ (90×90 см):</b> выводы ГВС/ХВС на высоте 100 см от чистого пола по центру душевой зоны. Трап в полу со сверхнизким сифоном.</li>
+      <li><b>Унитаз:</b> инсталляция крепится к капитальной стене. Выпуск канализации стандартный (высота 18–22 см по центру).</li>
+      <li><b>Раковина (69 см):</b> выводы ХВС/ГВС на высоте 55 см от пола строго по центру раковины. Канализационный вывод Ø32 мм на высоте 50–53 см.</li>
+      <li><b>Стиральная машина (50×50 см):</b> кран подачи холодной воды на высоте 60 см. Слив в канализацию через сифон с обратным клапаном (h=60 см).</li>
+    </ul>
+
+    <h2>4. План электрики и слаботочных сетей</h2>
+    <p>Все розетки монтируются строго в соответствии со следующей спецификацией высот и привязок:</p>
+    <div class="table-wrap">
+      <table class="spec-table">
+        <thead><tr><th>Зона</th><th>Назначение</th><th>Тип</th><th>h, см</th><th>Кол-во</th></tr></thead>
+        <tbody>
+          <tr><td>Прихожая</td><td>Входная зона / пылесос</td><td>Обычная</td><td class="num">30</td><td class="num">1</td></tr>
+          <tr><td>Прихожая</td><td>Зона у шкафа</td><td>Обычная</td><td class="num">30</td><td class="num">1</td></tr>
+          <tr><td>Санузел</td><td>Стиральная машина</td><td>Силовой / влагозащ.</td><td class="num">60</td><td class="num">1</td></tr>
+          <tr><td>Санузел</td><td>Около зеркала (фен, щётки)</td><td>Влагозащ. IP44</td><td class="num">100</td><td class="num">1</td></tr>
+          <tr><td>Кухня</td><td>Электроплита / духовка</td><td>Силовая (32А)</td><td class="num">10–15</td><td class="num">1</td></tr>
+          <tr><td>Кухня</td><td>Рабочая зона (фартук)</td><td>Блок обычных</td><td class="num">105</td><td class="num">2</td></tr>
+          <tr><td>Кухня</td><td>Холодильник</td><td>Силовой / обычная</td><td class="num">30</td><td class="num">1</td></tr>
+          <tr><td>Спальня</td><td>Левая прикроватная</td><td>Обычная</td><td class="num">60</td><td class="num">1</td></tr>
+          <tr><td>Спальня</td><td>Правая прикроватная</td><td>Обычная</td><td class="num">60</td><td class="num">1</td></tr>
+          <tr><td>Гостиная</td><td>Зона дивана (торшер/зарядки)</td><td>Обычная</td><td class="num">30</td><td class="num">1</td></tr>
+          <tr><td>Гостиная</td><td>Рабочий стол</td><td>Блок обычных</td><td class="num">85</td><td class="num">2</td></tr>
+          <tr><td>Комната</td><td>ТВ-блок (за телевизором)</td><td>Обычные + RJ45</td><td class="num">110</td><td class="num">3</td></tr>
+          <tr><td>Комната</td><td>Кондиционер</td><td>Силовой (кабель)</td><td class="num">210</td><td class="num">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="sheet-footer">
+      Источник данных: apt.py / Design_Project_Studio_30_4m.docx · Схема планировки — рабочий эскиз по спецификации, не заменяет геодезическую съёмку.
+    </footer>
+  </section>
+
+</div>
+
+<script>
+  var printBtn = document.getElementById('btn-print');
+  var pdfBtn = document.getElementById('btn-pdf');
+  var pdfHint = document.getElementById('pdf-hint');
+  var originalTitle = document.title;
+  var hintTimer = null;
+
+  printBtn.addEventListener('click', function () {
+    document.title = originalTitle;
+    window.print();
+  });
+
+  pdfBtn.addEventListener('click', function () {
+    document.title = 'Planirovka_Studio_30_4m2';
+    pdfHint.classList.add('visible');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(function () { pdfHint.classList.remove('visible'); }, 8000);
+    window.print();
+  });
+
+  window.addEventListener('afterprint', function () {
+    document.title = originalTitle;
+  });
+</script>
+</body>
+</html>
